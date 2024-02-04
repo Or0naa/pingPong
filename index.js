@@ -1,10 +1,12 @@
+// import(dotenv).config()
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3636;
+const port = 3636
 const {client} = require('./client.router');
 const db = require('./tryToCount/db');
 db.connect()
+
 
 app.use(express.json());
 app.use(cors());

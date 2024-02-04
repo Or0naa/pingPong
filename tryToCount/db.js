@@ -1,7 +1,8 @@
-const { mongoose } = require('mongoose');
-require('dotenv').config()
 
-const mongooseUrl = process.env.MONGO_URL
+// require('dotenv').config()
+const { mongoose } = require('mongoose');
+
+const mongooseUrl = "mongodb+srv://orna:orna4321@cluster0.ksct30c.mongodb.net/hey?retryWrites=true&w=majority"
 function connect() {
 
 try{    

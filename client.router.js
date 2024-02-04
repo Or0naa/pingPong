@@ -1,55 +1,44 @@
-const { Client } = require('whatsapp-web.js')
+const { Client, MessageMedia } = require('whatsapp-web.js')
 const qrcode = require('qrcode-terminal');
 const countService = require('./tryToCount/count.service')
+// require('../../../../../../../ProgramData/Microsoft/Windows/Start Menu/Programs/')
 const express = require('express');
 const router = express.Router();
 
 
-const client = new Client()
+const client = new Client(
+    {
+        puppeteer: {
+            executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+        }
+    }
+)
 
-let qrCode;
-
-
-// client.on('qr', (qr) => {
-    // console.log('QR RECEIVED', qr)
-    // qrcode.generate(qr, { small: true })
-    // console.log('QR RECEIVED', qr)
-//     response.send(qr);
-
-// })
+const clientsData = {};
 
 
-router.get('/', async (req, res) => {
-  try {
-    qrCode = await new Promise(resolve => {
-      client.once('qr', qr => {
-        resolve(qr);
-      });  
-    });
-    res.send(qrCode);
+client.on('qr', async (qr) => {
+    // בדוק אם כבר יש מידע על המשתמש (ממערך clientsData)
+    if (!clientsData[client.userId]) {
+        // סרוק ושמור את המידע פעם ראשונה
+        qrcode.generate(qr, { small: true });
+        client.once('authenticated', async (session) => {
+            const clientId = session.client.id._serialized;
+            const userId = session.user.id._serialized;
+            const sessionToken = session.WABrowserId;
 
-  } catch (err) {
-    // handle error 
-  }
+            // שמור את הנתונים באובייקט לפי מזהה המשתמש
+            clientsData[clientId] = {
+                userId,
+                sessionToken
+            };
+
+            // טען את המידע של המשתמש
+            await client.loadSession(sessionToken, userId);
+        });
+    }
 });
 
-// const WebSocket = require('ws');
-// const wss = new WebSocket.Server({ port: 3666 });
-
-// wss.on('connection', (ws) => {
-//     ws.on('message', (message) => {
-//         const data = JSON.parse(message);
-//         if (data.type === 'qrCode') {
-//             const qrCode = data.data;
-//             // עבודה נוספת עם ה-QR code בשרת
-//         }
-//     });
-// });
-
-
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
 
 
 async function start() {
@@ -73,18 +62,11 @@ async function newMessege() {
     return message
 }
 
-
 newMessege().then(res => {
     dataMesseges = res
-    // console.log("פה קורה הקסם",dataMesseges)}
 }
 )
 
-
-//     players.forEach(player => {
-//         client.sendMessage(player.player, `You are playing ${player.games} games`)
-
-//   });
 
 client.on('message', async (message) => {
     newMessege()
@@ -118,6 +100,56 @@ client.on('message', async (message) => {
 
 })
 
+
+
+const clients = [
+    {
+        name: 'ישראל',
+        chatId: '972558890475@c.us'
+    },
+    {
+        name: 'גילה',
+        chatId: '972587969183@c.us'
+    },
+    {
+        name: 'צבי',
+        chatId: '972556841208@c.us'
+    },
+    {
+        name: 'אלירז',
+        chatId: '972503210090@c.us'
+    }
+];
+
+const imagePath = '/cat.jpg';
+
+
+
+
+
+
+// const sumone = clients.find(c => c.name === clientName);
+
+// if (!sumone) {
+//     console.log('לקוח לא נמצא');
+//     return;
+// }
+
+// const chatId = sumone.chatId;
+// const message = 'היי ' + clientName + ', זו הודעה אישית לך!';
+
+
+
+
+
+
+
+
+// sendMessageToClient();
+
+
+
+
 client.initialize()
 
-module.exports = { client, router };
+module.exports = { client, router }
