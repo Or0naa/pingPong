@@ -2,7 +2,7 @@
 // require('dotenv').config()
 const { mongoose } = require('mongoose');
 
-const mongooseUrl =
+const mongooseUrl = 
 function connect() {
 
 try{    

@@ -8,6 +8,7 @@ const db = require('./tryToCount/db');
 db.connect()
 
 
+
 app.use(express.json());
 app.use(cors());
 
