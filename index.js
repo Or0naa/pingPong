@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = 3636
-const {client} = require('./client.router');
+const {client} = require('./client.srevice');
 const db = require('./tryToCount/db');
 db.connect()
 

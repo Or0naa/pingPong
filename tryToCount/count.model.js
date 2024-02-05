@@ -10,9 +10,7 @@ const countSchema = new mongoose.Schema({
 })
 const countModel = mongoose.model('count', countSchema)
 
-// async function starter(play){
-//     await countModel.create(play)
-// }
+
 
 
 

@@ -1,5 +1,5 @@
 const countModel = require('./count.model')
-const messageModel = require('./messeges.model')
+const messageModel = require('../messeges.model')
 
 async function readAll() {
     const count = await countModel.find()
